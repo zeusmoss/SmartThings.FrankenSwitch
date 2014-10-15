@@ -62,7 +62,7 @@ metadata {
 			state "off", label: 'Off', action: "switch.on", icon: "st.Home.home30", backgroundColor: "#ffffff", nextState: "on"
 			state "on", label: 'On', action: "switch.off", icon: "st.Home.home30", backgroundColor: "#79b821", nextState: "off"
 		}
-        standardTile("contact", "device.contact", width: 1, height: 1) {
+        standardTile("contact", "device.contact") {
             state "open", label: '${name}', icon: "st.contact.contact.open", backgroundColor: "#ffa81e"
             state "closed", label: '${name}', icon: "st.contact.contact.closed", backgroundColor: "#79b821"
         }
@@ -74,7 +74,7 @@ metadata {
 		    state "active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#53a7c0"
 		    state "inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff"
 	    }
-		standardTile("invert", "device.invert", width: 1, height: 1, canChangeIcon: false) {
+		standardTile("invert", "device.invert", canChangeIcon: false) {
 			state "normal",  label: '${name}', action: "reverse", icon: "st.Home.home30", backgroundColor: "#79b821", nextState: "reverse"
 			state "reverse", label: '${name}', action: "disable", icon: "st.Home.home30", backgroundColor: "#ffa81e", nextState: "disable"
 			state "disable",  label: '${name}', action: "normal", icon: "st.Home.home30", backgroundColor: "#ffffff", nextState: "normal"
