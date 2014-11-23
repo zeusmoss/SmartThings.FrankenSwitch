@@ -30,6 +30,9 @@
  *  ----------------
  *  2014-10-14  v0.0.0  Forked from http://thinkmakelab.com/2014/06/11/how-to-create-a-virtual-switch-in-smartthings/
  *  2014-10-13  v0.0.1  Initial release
+ *  2014-10-13  v0.0.2  Added polling and actuator capability
+						Made main tile icon changeable
+						Cleaned up tile definition
  *
  *  The latest version of this file can be found at:
  *    https://github.com/notoriousbdg/SmartThings.FrankenSwitch
@@ -42,7 +45,9 @@ metadata {
 			namespace: "notoriousbdg",
 			author: "Brandon Gordon") {
 
+			capability "Actuator"
 			capability "Switch"
+			capability "Polling"
 			capability "Refresh"        
 			capability "Contact Sensor"
 			capability "Motion Sensor"
@@ -58,23 +63,23 @@ metadata {
 
 	// UI tile definitions
 	tiles {
-		standardTile("switch", "device.switch", width: 2, height: 2, canChangeIcon: false) {
+		standardTile("switch", "device.switch", width: 2, height: 2, canChangeIcon: true, canChangeBackground:true) {
 			state "off", label: 'Off', action: "switch.on", icon: "st.Home.home30", backgroundColor: "#ffffff", nextState: "on"
 			state "on", label: 'On', action: "switch.off", icon: "st.Home.home30", backgroundColor: "#79b821", nextState: "off"
 		}
-        standardTile("contact", "device.contact") {
+        standardTile("contact", "device.contact", canChangeIcon: true, canChangeBackground:true) {
             state "open", label: '${name}', icon: "st.contact.contact.open", backgroundColor: "#ffa81e"
             state "closed", label: '${name}', icon: "st.contact.contact.closed", backgroundColor: "#79b821"
         }
-        standardTile("presence", "device.presence", width:1, height:1, canChangeBackground:true) {
+        standardTile("presence", "device.presence", canChangeIcon: true, canChangeBackground:true) {
             state "present", labelIcon:"st.presence.tile.present", backgroundColor:"#53a7c0"
             state "not present", labelIcon:"st.presence.tile.not-present", backgroundColor:"#ffffff"
         }
-	    standardTile("motion", "device.motion", width:1, height:1, canChangeBackground:true) {
+	    standardTile("motion", "device.motion", canChangeIcon: true, canChangeBackground:true) {
 		    state "active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#53a7c0"
 		    state "inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff"
 	    }
-		standardTile("invert", "device.invert", canChangeIcon: false) {
+		standardTile("invert", "device.invert") {
 			state "normal",  label: '${name}', action: "reverse", icon: "st.Home.home30", backgroundColor: "#79b821", nextState: "reverse"
 			state "reverse", label: '${name}', action: "disable", icon: "st.Home.home30", backgroundColor: "#ffa81e", nextState: "disable"
 			state "disable",  label: '${name}', action: "normal", icon: "st.Home.home30", backgroundColor: "#ffffff", nextState: "normal"
@@ -134,6 +139,19 @@ def off() {
     } else {
     	sendEvent(name: "invert",   value: "normal")
     }
+}
+
+def poll() {
+	if (device.latestValue('switch') == null) {
+    	off
+    }
+	if (device.latestValue('invert') == null) {
+    	sendEvent(name: "invert",   value: "normal")
+    }
+}
+
+def refresh() {
+	poll
 }
 
 def normal() {
